@@ -1,3 +1,4 @@
+import 'package:database_239/note_model.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -15,6 +16,7 @@ class AppDatabase{
   static const String COLUMN_NOTE_ID = "note_id";
   static const String COLUMN_NOTE_TITLE = "note_title";
   static const String COLUMN_NOTE_DESC = "note_desc";
+  static const String COLUMN_NOTE_CREATED_AT = "note_created_at";
 
   /// all the logic of database will be provided here
 
@@ -41,7 +43,7 @@ class AppDatabase{
       /// do that work which you want to execute in db when for the first time and only time when db is created..
       /// we need to add the tables in here..
 
-      db.execute("create table $TABLE_NAME_NOTE ( $COLUMN_NOTE_ID integer primary key autoincrement, $COLUMN_NOTE_TITLE text, $COLUMN_NOTE_DESC text)");
+      db.execute("create table $TABLE_NAME_NOTE ( $COLUMN_NOTE_ID integer primary key autoincrement, $COLUMN_NOTE_TITLE text, $COLUMN_NOTE_DESC text, $COLUMN_NOTE_CREATED_AT text)");
 
     });
 
@@ -52,28 +54,53 @@ class AppDatabase{
   /// table create done
 
   /// insert data
-  void addNote({required String title, required String desc}) async{
+  addNote({required NoteModel newNote}) async{
 
     var db = await getDb();
 
-    db.insert(TABLE_NAME_NOTE, {
-      COLUMN_NOTE_TITLE : title,
-      COLUMN_NOTE_DESC : desc,
-    });
+    db.insert(TABLE_NAME_NOTE, newNote.toMap());
 
   }
 
 
   /// fetch data
-  Future<List<Map<String, dynamic>>> fetchAllNotes() async{
+  Future<List<NoteModel>> fetchAllNotes() async{
     
     var db = await getDb();
     
     var data = await db.query(TABLE_NAME_NOTE);
 
-    return data;
+    List<NoteModel> mData = [];
+
+    for(Map<String, dynamic> eachMap in data){
+      var eachModel = NoteModel.fromMap(eachMap);
+      mData.add(eachModel);
+    }
+
+    return mData;
     
   }
+
+  ///update the note
+  updateNote(NoteModel updatedNote) async {
+
+    var db = await getDb();
+
+    db.update(TABLE_NAME_NOTE, updatedNote.toMap(),
+        where: "$COLUMN_NOTE_ID = ${updatedNote.id}");
+
+  }
+
+  ///delete the note
+  deleteNote(int id) async{
+    var db = await getDb();
+
+    db.delete(TABLE_NAME_NOTE,
+        where: "$COLUMN_NOTE_ID = ?", whereArgs: ['$id']);
+
+  }
+
+
 
 
 }

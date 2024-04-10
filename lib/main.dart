@@ -1,8 +1,14 @@
+import 'package:database_239/app_database.dart';
+import 'package:database_239/databse_provider.dart';
 import 'package:database_239/pages/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (context) => DatabaseProvider(db: AppDatabase.db),
+    child: MyApp(),
+  ),);
 }
 
 class MyApp extends StatelessWidget {
@@ -17,7 +23,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: HomePage(),
+      ///4
+      home: HomePage()
     );
   }
 }
