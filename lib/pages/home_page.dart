@@ -35,6 +35,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
 
     ///
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
@@ -55,12 +56,14 @@ class _HomePageState extends State<HomePage> {
 
                 return ListTile(
                   onTap: () {
-                    /*var updatedNote = NoteModel(title: "Updated Note", desc: "Updated desc", createdAt: mData[index].createdAt, id: mData[index].id);
-
+                    /*
                     db!.updateNote(updatedNote);
 
                     getNotes();
 */
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => SecondPage(isUpdate: true, noteModel: mData[index],),));
+
+
                   },
                   leading: Text(mData[index].id.toString()),
                   title: Text(mData[index].title),
@@ -69,6 +72,8 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       /*db!.deleteNote(mData[index].id);
                       getNotes();*/
+                      
+                      Provider.of<DatabaseProvider>(context, listen: false).deleteNote(mData[index].id);
                     },
                     child: Icon(Icons.add),
                   ),

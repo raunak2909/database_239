@@ -28,12 +28,16 @@ class DatabaseProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  void updateNote(NoteModel updatedNote, int id){
-
+  void updateNote(NoteModel updatedNote) async{
+    await db.updateNote(updatedNote);
+    _listNotes = await db.fetchAllNotes();
+    notifyListeners();
   }
 
-  void deleteNote(int id){
-
+  void deleteNote(int id) async{
+    await db.deleteNote(id);
+    _listNotes = await db.fetchAllNotes();
+    notifyListeners();
   }
   ///3
 

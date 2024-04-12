@@ -5,7 +5,9 @@ import '../databse_provider.dart';
 import '../note_model.dart';
 
 class SecondPage extends StatelessWidget {
-  const SecondPage({super.key});
+  bool isUpdate;
+  NoteModel? noteModel;
+  SecondPage({this.isUpdate = false, this.noteModel});
 
   @override
   Widget build(BuildContext context) {
@@ -13,13 +15,23 @@ class SecondPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Add Note'),
       ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: (){
-          context.read<DatabaseProvider>().addNote(
-              newNote: NoteModel(
-                  title: "New Note",
-                  desc: "Do what makes you happy.",
-                  createdAt: DateTime.now().millisecondsSinceEpoch.toString()));
+
+          if(isUpdate){
+            var updatedNote = NoteModel(title: "Updated Note", desc: "Updated desc", createdAt: noteModel!.createdAt, id: noteModel!.id);
+            context.read<DatabaseProvider>().updateNote(updatedNote);
+          } else {
+            context.read<DatabaseProvider>().addNote(
+                newNote: NoteModel(
+                    title: "New Note",
+                    desc: "Do what makes you happy.",
+                    createdAt: DateTime
+                        .now()
+                        .millisecondsSinceEpoch
+                        .toString()));
+          }
         },
         child: Icon(Icons.add),
       ),
