@@ -1,3 +1,4 @@
+import 'package:database_239/cubit/db_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,24 +14,36 @@ class SecondPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Note'),
+        title: Text(isUpdate ? "Update Note" : "Add Note"),
       ),
 
       floatingActionButton: FloatingActionButton(
         onPressed: (){
 
           if(isUpdate){
+            /*var updatedNote = NoteModel(title: "Updated Note", desc: "Updated desc", createdAt: noteModel!.createdAt, id: noteModel!.id);
+            context.read<DatabaseProvider>().updateNote(updatedNote);*/
+
             var updatedNote = NoteModel(title: "Updated Note", desc: "Updated desc", createdAt: noteModel!.createdAt, id: noteModel!.id);
-            context.read<DatabaseProvider>().updateNote(updatedNote);
+            context.read<DBCubit>().updateNote(updatedNote: updatedNote);
           } else {
-            context.read<DatabaseProvider>().addNote(
+            /*context.read<DatabaseProvider>().addNote(
                 newNote: NoteModel(
                     title: "New Note",
                     desc: "Do what makes you happy.",
                     createdAt: DateTime
                         .now()
                         .millisecondsSinceEpoch
-                        .toString()));
+                        .toString()));*/
+
+            ///cubit
+            context.read<DBCubit>().addNote(newNote: NoteModel(
+                title: "New Note",
+                desc: "Do what makes you happy.",
+                createdAt: DateTime
+                    .now()
+                    .millisecondsSinceEpoch
+                    .toString()));
           }
         },
         child: Icon(Icons.add),

@@ -54,12 +54,13 @@ class AppDatabase{
   /// table create done
 
   /// insert data
-  addNote({required NoteModel newNote}) async{
+  Future<bool> addNote({required NoteModel newNote}) async{
 
     var db = await getDb();
 
-    db.insert(TABLE_NAME_NOTE, newNote.toMap());
+    var check = await db.insert(TABLE_NAME_NOTE, newNote.toMap());
 
+    return check>0;
   }
 
 
@@ -82,12 +83,14 @@ class AppDatabase{
   }
 
   ///update the note
-  updateNote(NoteModel updatedNote) async {
+  Future<bool> updateNote(NoteModel updatedNote) async {
 
     var db = await getDb();
 
-    db.update(TABLE_NAME_NOTE, updatedNote.toMap(),
+    int check = await db.update(TABLE_NAME_NOTE, updatedNote.toMap(),
         where: "$COLUMN_NOTE_ID = ${updatedNote.id}");
+
+    return check>0;
 
   }
 
